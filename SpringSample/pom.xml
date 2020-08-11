@@ -77,7 +77,6 @@
 			<artifactId>bootstrap</artifactId>
 			<version>3.3.7-1</version>
 		</dependency>
-
 		<!-- Validation用のライブラリ -->
 		<!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
 		<dependency>
@@ -107,7 +106,6 @@
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjweaver</artifactId>
 		</dependency>
-
 	</dependencies>
 
 	<build>
