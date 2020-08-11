@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.example.demo.login.domain.model.GroupOrder;
 import com.example.demo.login.domain.model.SignupForm;
 
 @Controller
@@ -43,11 +44,12 @@ public class SignupController {
 	}
 
 	@PostMapping("/signup")
-	public String postSignUp(@ModelAttribute @Validated SignupForm form,BindingResult bindingResult, Model model) {
+	public String postSignUp(@ModelAttribute @Validated(GroupOrder.class) SignupForm form,BindingResult bindingResult, Model model) {
 		// データバインド結果の受け取りにはBindingResultクラスを追加する
 		// バリデーションを実施するには、フォームクラスに@Validationアノテーションをつける
 		// バリデーションの実施結果はBindeingResultクラスに入っているので、バリデーションを行う場合でも、BindingResultクラスを引数に設定する
 
+		// @Validatedのパラメータに、実行順序のインターフェースを指定。
 		if(bindingResult.hasErrors()) {
 			// GETリクエストのメソッドでユーザ登録画面に戻る
 			return getSignUp(form, model);
