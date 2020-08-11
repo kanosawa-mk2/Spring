@@ -5,16 +5,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.example.demo.login.domain.model.LoginForm;
+
 @Controller
-public class LoginContoroller {
+public class LoginController {
 
 	@GetMapping("/login")
-	public String getLogin(Model model) {
+	public String getLogin(LoginForm form,Model model) {
 		return "login/login";
 	}
 
 	@PostMapping("/login")
-	public String postLogin(Model model) {
+	public String postLogin(LoginForm form,Model model) {
 		return "login/login";
 	}
 }
