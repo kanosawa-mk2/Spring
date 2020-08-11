@@ -1,0 +1,39 @@
+
+■データバインド
+　手順
+　　・Formクラスの作成(com.example.demo.login.domain.model.SignupForm)
+　　　　@DateTimeFormatなどのアノテーションあり
+　　・ControllerのメソッドにFormクラスを引数に追加(com.example.demo.login.controller.SignupController)
+　　　　@ModelAttributeをつける
+　　・(バインド結果を受けとる場合)ControllerのメソッドにBindingResultを引数に追加
+　　・htmlにバインド用のタグを設定（th:object、th:field）
+
+■バリデーション
+　手順
+　　・Fromにバリデーション用のアノテーションを設定
+　　・htmlにth:errorsタグの表示領域を追加
+　　
+　　・バリデーションの順序の指定
+　　　・@GroupSequenceのインターフェース作成(com.example.demo.login.domain.model.GroupOrder)
+　　　・Formのアノテーションにgroups属性を設定
+　　
+　　・メッセージの設定
+　　　・WebConfigでメッセージファイルの設定（なくてもデフォルトでmessages.propertiesが使用されるから大丈夫？）
+　　　・messages.propertiesを作成
+
+■AOP
+　手順
+　　・AOPのクラスを作成 @Aspectと@Componentをつける
+　　・AOPクラスのメソッドには、JoinPoint（実行タイミング）のアノテーションを付ける
+　　・JoinPointのアノテーション内に、Pointcut（実行場所）を指定する
+　　・JoinPoint（実行タイミング）のアノテーション
+　　　@Before：実行の前
+　　　@After：実行の後（正常終了・以上終了）
+　　　@Around：実行の前後
+　　　@AfterReturning：正常終了後
+　　　@AfterThrowing：異常終了後
+　　・Pointcut（実行場所）を指定方法
+　　　execution(<戻り値><パッケージ名>.<クラス名>.<メソッド名>(<引数>)
+　　　bean(<Bean名>)
+　　　@annotation(<パッケージ名>.<アノテーション名>)
+　　　@within(<パッケージ名>.<アノテーション名>)

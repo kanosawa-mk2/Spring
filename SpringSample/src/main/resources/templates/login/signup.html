@@ -13,6 +13,7 @@
 			<h1>ユーザ登録画面</h1>
 		</div>
 		<!-- th:action="@{/signup}はタイムリーフを使った書き方。Springセキュリティを使う場合は使用する。エラー時だけclass属性にhas-errorを追加しています。 -->
+		<!-- th:objectはデータバインド用のタグ。th:fieldでそのオブジェクト名を省略することができる。 -->
 		<form method="post" th:action="@{/signup}" th:object="${signupForm}">
 			<table class="table table-bordered table-hover">
 				<!-- ユーザID -->
@@ -22,6 +23,11 @@
 						<!-- CSSのclassを追加する場合、th:classappend属性を使います。 -->
 						<div class="form-group"
 							th:classappend="${#fields.hasErrors('userId')} ? 'has-error'">
+
+							<!-- th:fieldの使い方その１ th:field="${<ModelAttributeのキー名.フィールド名>}" -->
+							<!-- 　th:objectを使わなかった場合の書き方 -->
+							<!-- th:fieldの使い方その２ th:field="*{フィールド名>}" -->
+							<!-- 　th:objectが付いたタグ内であれば、オブジェクト名を省略することができます。 -->
 							<input type="text" class="form-control" th:field="*{userId}" />
 
 							<!-- 個別にエラーメッセージを表示したい場合、th:if属性を使用します。th:if属性には条件式を設定します。trueの場合のみ、そのタグが表示されます。 -->
