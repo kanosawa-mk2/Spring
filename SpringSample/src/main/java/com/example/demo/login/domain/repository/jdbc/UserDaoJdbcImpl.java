@@ -13,7 +13,9 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.login.domain.model.User;
 import com.example.demo.login.domain.repository.UserDao;
 
-@Repository
+// Repositoryアノテーションの引数はBean名をセットしている。
+// Bean名をセットすることで、@Autowiredする際に、どのクラスを使用するか指定できる。
+@Repository("UserDaoJdbcImpl")
 public class UserDaoJdbcImpl implements UserDao {
 
 	@Autowired
