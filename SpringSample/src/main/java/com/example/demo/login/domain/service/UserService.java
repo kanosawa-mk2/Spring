@@ -19,7 +19,7 @@ public class UserService {
 	 * Qualifierを付けないといけない。
 	 */
 	@Autowired
-	@Qualifier("UserDaoJdbcImpl2")
+	@Qualifier("UserDaoJdbcImpl4")
 	UserDao dao;
 
 
