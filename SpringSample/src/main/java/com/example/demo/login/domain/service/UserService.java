@@ -25,7 +25,11 @@ public class UserService {
 	 * Qualifierを付けないといけない。
 	 */
 	@Autowired
-	@Qualifier("UserDaoJdbcImpl4")
+	//@Qualifier("UserDaoJdbcImpl")
+	//@Qualifier("UserDaoJdbcImpl2") RowMapper使用版
+	//@Qualifier("UserDaoJdbcImpl3") BeanPropertyRowMapper使用版
+	//@Qualifier("UserDaoJdbcImpl4") ResultSetExtractor使用版
+	@Qualifier("UserDaoNamedJdbcImple")
 	UserDao dao;
 
 
