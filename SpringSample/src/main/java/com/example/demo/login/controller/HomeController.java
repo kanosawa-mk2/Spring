@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -122,13 +123,16 @@ public class HomeController {
 		user.setAge(form.getAge()); //年齢
 		user.setMarriage(form.isMarriage()); //結婚ステータス
 
-		boolean result = userService.updateOne(user);
+		try {
+			boolean result = userService.updateOne(user);
+			if (result) {
+				model.addAttribute("result", "更新成功");
+			} else {
 
-		if (result) {
-			model.addAttribute("result", "更新成功");
-		} else {
-
-			model.addAttribute("result", "更新失敗");
+				model.addAttribute("result", "更新失敗");
+			}
+		} catch (DataAccessException e) {
+			model.addAttribute("result", "更新失敗(トランザクションテスト)");
 		}
 
 		return getUserList(model);
@@ -167,14 +171,14 @@ public class HomeController {
 		try {
 
 			bytes = userService.getFile("sample.csv");
-		}catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		HttpHeaders header = new HttpHeaders();
 		header.add("Content-Type", "text/csv; charset=UTF-8");
 		header.setContentDispositionFormData("filename", "sample.csv");
-		return new ResponseEntity<>(bytes,header, HttpStatus.OK);
+		return new ResponseEntity<>(bytes, header, HttpStatus.OK);
 	}
 
 }

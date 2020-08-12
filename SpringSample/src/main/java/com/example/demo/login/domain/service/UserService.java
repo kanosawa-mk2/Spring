@@ -11,10 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.login.domain.model.User;
 import com.example.demo.login.domain.repository.UserDao;
 
+@Transactional
 @Service
 public class UserService {
 
@@ -25,11 +27,11 @@ public class UserService {
 	 * Qualifierを付けないといけない。
 	 */
 	@Autowired
-	//@Qualifier("UserDaoJdbcImpl")
+	@Qualifier("UserDaoJdbcImpl")
 	//@Qualifier("UserDaoJdbcImpl2") RowMapper使用版
 	//@Qualifier("UserDaoJdbcImpl3") BeanPropertyRowMapper使用版
 	//@Qualifier("UserDaoJdbcImpl4") ResultSetExtractor使用版
-	@Qualifier("UserDaoNamedJdbcImple")
+	//@Qualifier("UserDaoNamedJdbcImple") NamedParameterJdbcTemplate使用版
 	UserDao dao;
 
 
