@@ -3,6 +3,7 @@ package com.example.demo.login.controller;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,9 +14,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.demo.login.domain.model.GroupOrder;
 import com.example.demo.login.domain.model.SignupForm;
+import com.example.demo.login.domain.model.User;
+import com.example.demo.login.domain.service.UserService;
 
 @Controller
 public class SignupController {
+
+	@Autowired
+	private UserService userService;
 
 	private Map<String, String> radioMarriage;
 
@@ -44,17 +50,34 @@ public class SignupController {
 	}
 
 	@PostMapping("/signup")
-	public String postSignUp(@ModelAttribute @Validated(GroupOrder.class) SignupForm form,BindingResult bindingResult, Model model) {
+	public String postSignUp(@ModelAttribute @Validated(GroupOrder.class) SignupForm form, BindingResult bindingResult, Model model) {
 		// データバインド結果の受け取りにはBindingResultクラスを追加する
 		// バリデーションを実施するには、フォームクラスに@Validationアノテーションをつける
 		// バリデーションの実施結果はBindeingResultクラスに入っているので、バリデーションを行う場合でも、BindingResultクラスを引数に設定する
 
 		// @Validatedのパラメータに、実行順序のインターフェースを指定。
-		if(bindingResult.hasErrors()) {
+		if (bindingResult.hasErrors()) {
 			// GETリクエストのメソッドでユーザ登録画面に戻る
 			return getSignUp(form, model);
 		}
 		System.out.println(form);
+
+		User user = new User();
+		user.setUserId(form.getUserId()); //ユーザーID
+		user.setPassword(form.getPassword()); //パスワード
+		user.setUserName(form.getUserName()); //ユーザー名
+		user.setBirthday(form.getBirthday()); //誕生日
+		user.setAge(form.getAge()); //年齢
+		user.setMarriage(form.isMarriage()); //結婚ステータス
+		user.setRole("ROLE_GENERAL"); //ロール（一般）
+
+		boolean result = userService.insert(user);
+
+		if(result) {
+			System.out.println("insert成功");
+		}else {
+			System.out.println("insert失敗");
+		}
 
 		// login.htmlにリダイレクト
 		return "redirect:/login";
