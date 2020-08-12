@@ -149,7 +149,11 @@ public class UserDaoJdbcImpl implements UserDao {
 	 */
 	@Override
 	public void userCsvOut() throws DataAccessException {
-		// TODO 自動生成されたメソッド・スタブ
+		String sql = "SELECT * FROM m_user";
+
+		UserRowCallbackHandler handler = new UserRowCallbackHandler();
+
+		jdbc.query(sql, handler);
 
 	}
 
