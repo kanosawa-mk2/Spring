@@ -165,3 +165,17 @@
 　NESTED        トランザクション開始        部分的なトランザクション開始
 
 
+■例外処理
+　Springの例外処理実装方法
+　・@AfterThrowingアスペクトを使用する(com.example.demo.login.aspect.ErrorAspect)
+　・コントローラークラス毎に例外ハンドリングを実装する(com.example.demo.login.controller.SignupController)
+　　コントローラークラス内に、@ExceptionHandlerというアノテーションを付けたメソッドを用意
+　・Webアプリケーション全体で共通の例外ハンドリングを実装する(com.example.demo.login.controller.GlobalControllAdvice)
+　　@ControllerAdviceアノテーションを付けたクラスを用意
+　　クラスの中身は、@ExceptionHandlerを付けたメソッドを用意する
+
+■エラーページ
+　・共通のエラーページ
+　　src/main/resources/template配下に、error.htmlを用意
+　・HTTPエラー毎のエラーページ
+　　src/main/resources/errorフォルダーに<エラーコード>.htmlというファイルを作成する。
