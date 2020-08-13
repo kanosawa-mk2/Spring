@@ -281,3 +281,8 @@
 
 ■セキュリティその他
 　ロール名の先頭には"ROLE_"を付けてデータベースに登録する。
+
+■REST
+  REST用コントローラーを作成するには、クラスに@RestControllerを付ける。
+  @RestControllerを付けると、そのクラスのメソッドの戻り値を呼び出し元に返す。
+  PUTメソッドには、@PutMappingを使う。DELETEメソッドには、@DeleteMappingを使う。
