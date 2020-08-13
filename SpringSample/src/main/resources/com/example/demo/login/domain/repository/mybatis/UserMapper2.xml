@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+	■クラス指定
+	上記コードのxmlと、それに対応するクラス（UserMapper2.xmlとUserMapper2.java）は同じ階層構造となっているため、
+	<mapper>タグだけで紐付けがされます。
+	もしも、クラスとxmlで異なる階層構造にしたい場合は、namespace属性にパッケージ名を含めたクラス名を指定します。
+	サンプルコードでコメントアウトしている部分のように指定します。
+
+	namespace属性はからにできない？
+ -->
+<!-- <mapper> -->
+<mapper namespace="com.example.demo.login.domain.repository.mybatis.UserMapper2">
+	<!--
+		■マッピング定義の作成
+		まずはマッピング定義を作成します。
+		これは、selectの取得結果と、Javaクラスを紐付けるという意味です。
+		以下のように作成します。
+
+		・<resultMaptype="<クラス名>"id="<マッピング名>">
+			まずは、Javaのどのクラスと紐付けるかを指定します。typeにはパッケージ名を含めたクラス名を指定します。
+			idには、SQLと紐付けるための名前を設定しておきます。
+
+		・<id column="<カラム名>"property="<Javaクラスのフィールド名>"/>
+			idタグには通常、主キーを指定します。idタグに指定した値が異なる分だけ、Javaクラスのインスタンスが作られます。
+
+			columnにはselect結果のカラム、propertyにはクラスのフィールド名を指定します。
+			サンプルコードでは、select結果のuser_idカラムの値が、UserクラスのuserIdフィールドに入れられることになります。
+			そして、user_idの値が異なる行数の分だけ、Userクラスのインスタンスが作られます。
+
+		・<result column="<カラム名>"property="<Javaクラスのフィールド名>"/>
+			idタグと同様に、カラム名とフィールドを指定します。
+			idタグと異なるのは、ここで指定されたカラムの値が異なっても、インスタンスは作られないということです。
+	 -->
+	<resultMap type="com.example.demo.login.domain.model.User" id="user">
+		<id column="user_id" property="userId" />
+		<result column="password" property="password" />
+		<result column="user_name" property="userName" />
+		<result column="birthday" property="birthday" />
+		<result column="age" property="age" />
+		<result column="marriage" property="marriage" />
+		<result column="role" property="role" />
+	</resultMap>
+
+	<!--
+		■メソッドとの紐付け
+			xml内に定義したSQLと、Javaのメソッドとの紐付けについて。
+			まず、どのようなSQLを実行するかによってタグを指定します。
+			insert文を実行するならinsertタグ、selectならselectといった具合に指定します。
+			そのタグにid属性を付けます。このid属性に、Javaのメソッド名を指定します。
+			これにより、xml内のSQLとJavaのメソッドが紐付けられます。
+			サンプルコードで言うと、UserMapper2.javaのinsertというメソッドと、xmlのinsertメソッドが紐付きます。
+
+		■parameterType
+			Javaのメソッドから渡されたパラメーターをSQLに渡すためには、parameterType属性を付けます。
+			・parameterType属性
+			Javaメソッドの引数の型を指定します。
+			サンプルコードで言うと、UserMapper2.javaのinsertメソッドではUser型の引数が指定されています。
+			ですから、パッケージ名を含めたクラス名（com.example.demo.login.domain.model.User）を指定しています。
+			そして、SQL文に#{<変数名>}でパラメーターをSQLに埋め込むことができます。
+			intやbooleanなどの基本型の場合は、パッケージ名は付けずにintやbooleanなどのように指定します。
+	 -->
+	<!-- １件insert -->
+	<insert id="insert"
+		parameterType="com.example.demo.login.domain.model.User">
+		INSERT INTO m_user (
+		user_id,
+		password,
+		user_name,
+		birthday,
+		age,
+		marriage,
+		role)
+		VALUES (
+		#{userId},
+		#{password},
+		#{userName},
+		#{birthday},
+		#{age},
+		#{marriage},
+		#{role})
+	</insert>
+
+	<!--
+		■resultType
+			SQLの結果を受け取る場合、resultType属性を使います。
+			上記のサンプルコードでは、selectOneメソッドのresultType属性にUserを指定しています。
+			select結果は、自動的にUserクラスにマッピングされます。
+	 -->
+	<!-- １件検索 -->
+	<select id="selectOne" parameterType="string"
+		resultType="com.example.demo.login.domain.model.User">
+		SELECT
+		user_id,
+		password,
+		user_name,
+		birthday,
+		age,
+		marriage,
+		role
+		FROM
+		m_user
+		WHERE
+		user_id = #{userId}
+	</select>
+
+	<!--
+		■マッピング定義
+			独自に作成したクラスとSelect結果が一致しない場合、マッピング定義を使います。
+
+			■マッピング定義の利用
+				マッピング定義を利用するためには、selectタグなどにresultMap属性を付けます。
+				そこには、マッピング名を指定します。これにより、SQLとマッピング定義を紐付けます。
+	 -->
+	<!-- 全件検索 -->
+	<select id="selectMany" resultMap="user">
+		SELECT
+		user_id,
+		password,
+		user_name,
+		birthday,
+		age,
+		marriage,
+		role
+		FROM
+		m_user
+	</select>
+
+	<!-- １件更新 -->
+	<update id="updateOne"
+		parameterType="com.example.demo.login.domain.model.User">
+		UPDATE m_user
+		SET
+		password = #{password},
+		user_name = #{userName},
+		birthday = #{birthday},
+		age = #{age},
+		marriage = #{marriage}
+		WHERE user_id = #{userId}
+	</update>
+
+	<!-- １件削除 -->
+	<delete id="deleteOne" parameterType="string">
+		DELETE FROM m_user WHERE user_id = #{userId}
+	</delete>
+</mapper>
