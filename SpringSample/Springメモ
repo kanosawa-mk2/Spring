@@ -286,3 +286,18 @@
   REST用コントローラーを作成するには、クラスに@RestControllerを付ける。
   @RestControllerを付けると、そのクラスのメソッドの戻り値を呼び出し元に返す。
   PUTメソッドには、@PutMappingを使う。DELETEメソッドには、@DeleteMappingを使う。
+
+■SpringTest
+　SpringTestとは、Springを起動した後にJUnitなどのテストを実行できるフレームワーク。
+　SpringTestを使うには、以下の２つのアノテーションをクラスに付けます。
+　　@RunWith(SpringRunner.class)
+　　@SpringBootTest
+
+■リポジトリークラスのテスト
+　@Sqlアノテーションを使えば、任意のSQLを実行した後のテストができる。
+　SQL文は、src/test/resources配下に.sqlファイルを置く。
+
+■コントローラークラスのテスト@AutoConfigureMockMvcアノテーションをクラスに付ければ、Springが用意するモックを使用できる。
+　MockMvcクラスを使えば、画面表示内容のテストができる。
+　@WithMockUserアノテーションをメソッドに付ければ、ログイン後の画面をテストできる。
+　Springが用意するMockitoを使えば、メソッドの戻り値を任意の値に設定できる。
