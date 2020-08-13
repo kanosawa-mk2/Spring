@@ -1,181 +1,283 @@
+■DI
+  ・インスタンスの生成
+     DIコンテナの中で、インスタンスを生成します。
+     つまり、クラスをnewします。
+     そして、アプリケーションではそれらのインスタンスを取得して利用します。
+     DIの中で、毎回newしたインスタンスをアプリケーションに渡すのか、それとも、
+     一度newしたインスタンスをアプリケーションに渡すのかを管理してくれます。
+  ・インスタンスのライフサイクル管理
+     インスタンスのライフサイクル管理を簡単に実装できるようになります。
+     これは、Webアプリケーション開発をとても楽にしてくれます。
+     どういうことかというと、サーブレットのリクエストスコープや、
+     セッションスコープにインスタンスを簡単に登録できるということです。
+
+  ・DIの処理
+    1.DIの管理対象クラスを探す（コンポーネントスキャン）
+      【対象アノテーション】
+        @Component
+        @Controller
+        @Service
+        @Repository
+        @Configuration
+        @RestController
+        @ControllAdvice
+        @ManagedBean
+        @Named
+    2.インスタンスの生成と注入
+      DI対象のクラス（Bean）を集めた後は、それらのインスタンスをDIが生成（new）します。
+      そして、生成したインスタンスを@Autowiredアノテーションが付いているフィールドなどに注入（代入）します。
+
+
+■DIの実装方法
+  1.アノテーションベース
+  2.JavaConfig(com.example.demo.SecurityConfig)
+    @Configurationアノテーションを付けたクラスを用意する。
+    そのクラスの中に、@Beanアノテーションが付いたgetterメソッドを用意する。
+    これで、getterの戻り値がBeanとしてDIコンテナに登録される。
+    @AutowiredがDIのBeanを利用している
+  3.xml
+  4.JavaConfig＋アノテーション
+  5.xml＋アノテーション
+
+    『4.JavaConfig＋アノテーション』では、DIで管理したいクラスに@Controllerなどのアノテーションを付けます。
+    細かい設定などをしたいインスタンスだけ、JavaConfigで設定します。
+    だから、実際にはごく小規模なアプリケーションであれば『1.アノテーションベース』で作ってしまいます。
+    規模が大きくなったり、設定の切り替えなどを行いたい場合は、『4.JavaConfig＋アノテーション』で実装します。
+
+
+■DIのライフサイクル
+  @Scopeアノテーションを付け。そのアノテーションに、どのスコープに登録するかを指定する。
+  【スコープ一覧】
+    ・singleton
+      Spring起動時にインスタンスを１つだけ生成します。
+      生成後は、１つのインスタンスを共有して使います。
+      デフォルト設定のため、@Scopeアノテーションを付けなかった場合は、全てsingletonになります。
+    ・prototype
+      Beanを取得する度に、毎回インスタンスが生成されます。
+      sessionHTTPのセッション単位でインスタンスが生成されます。
+      Webアプリケーションの場合のみ使用できます。
+    ・request
+      HTTPのリクエスト単位でインスタンスが生成されます。
+      Webアプリケーションの場合のみ使用できます。
+    ・global
+      Sessionポートレット環境におけるGrobalSession単位でインスタンスが生成されます。
+      ポートレットに対応したWebアプリケーションの場合のみ使用できます。
+    ・application
+      サーブレットのコンテキスト単位でインスタンスが生成されます。
+      Webアプリケーションの場合のみ使用できます。
+
 
 ■データバインド
-　手順
-　　・Formクラスの作成(com.example.demo.login.domain.model.SignupForm)
-　　　　@DateTimeFormatなどのアノテーションあり
-　　・ControllerのメソッドにFormクラスを引数に追加(com.example.demo.login.controller.SignupController)
-　　　　@ModelAttributeをつける
-　　・(バインド結果を受けとる場合)ControllerのメソッドにBindingResultを引数に追加
-　　・htmlにバインド用のタグを設定（th:object、th:field）
+  手順
+    ・Formクラスの作成(com.example.demo.login.domain.model.SignupForm)
+        @DateTimeFormatなどのアノテーションあり
+    ・ControllerのメソッドにFormクラスを引数に追加(com.example.demo.login.controller.SignupController)
+        @ModelAttributeをつける
+    ・(バインド結果を受けとる場合)ControllerのメソッドにBindingResultを引数に追加
+    ・htmlにバインド用のタグを設定（th:object、th:field）
 
 ■バリデーション
-　手順
-　　・Fromにバリデーション用のアノテーションを設定
-　　・htmlにth:errorsタグの表示領域を追加
-　　
-　　・バリデーションの順序の指定
-　　　・@GroupSequenceのインターフェース作成(com.example.demo.login.domain.model.GroupOrder)
-　　　・Formのアノテーションにgroups属性を設定
-　　
-　　・メッセージの設定
-　　　・WebConfigでメッセージファイルの設定（なくてもデフォルトでmessages.propertiesが使用されるから大丈夫？）
-　　　・messages.propertiesを作成
+  手順
+    ・Fromにバリデーション用のアノテーションを設定
+    ・htmlにth:errorsタグの表示領域を追加
+
+    ・バリデーションの順序の指定
+      ・@GroupSequenceのインターフェース作成(com.example.demo.login.domain.model.GroupOrder)
+      ・Formのアノテーションにgroups属性を設定
+
+    ・メッセージの設定
+      ・WebConfigでメッセージファイルの設定（なくてもデフォルトでmessages.propertiesが使用されるから大丈夫？）
+      ・messages.propertiesを作成
 
 ■AOP
-　手順
-　　・AOPのクラスを作成 @Aspectと@Componentをつける
-　　・AOPクラスのメソッドには、JoinPoint（実行タイミング）のアノテーションを付ける
-　　・JoinPointのアノテーション内に、Pointcut（実行場所）を指定する
-　　・JoinPoint（実行タイミング）のアノテーション
-　　　@Before：実行の前
-　　　@After：実行の後（正常終了・以上終了）
-　　　@Around：実行の前後
-　　　@AfterReturning：正常終了後
-　　　@AfterThrowing：異常終了後
-　　・Pointcut（実行場所）を指定方法
-　　　execution(<戻り値><パッケージ名>.<クラス名>.<メソッド名>(<引数>)
-　　　bean(<Bean名>)
-　　　@annotation(<パッケージ名>.<アノテーション名>)
-　　　@within(<パッケージ名>.<アノテーション名>)
+  手順
+    ・AOPのクラスを作成 @Aspectと@Componentをつける
+    ・AOPクラスのメソッドには、JoinPoint（実行タイミング）のアノテーションを付ける
+    ・JoinPointのアノテーション内に、Pointcut（実行場所）を指定する
+    ・JoinPoint（実行タイミング）のアノテーション
+        @Before：実行の前
+        @After：実行の後（正常終了・以上終了）
+        @Around：実行の前後
+        @AfterReturning：正常終了後
+        @AfterThrowing：異常終了後
+    ・Pointcut（実行場所）を指定方法
+        execution(<戻り値><パッケージ名>.<クラス名>.<メソッド名>(<引数>)
+        bean(<Bean名>)
+        @annotation(<パッケージ名>.<アノテーション名>)
+        @within(<パッケージ名>.<アノテーション名>)
 
 ■タイムリーフ
-　記号
-　#･･･関数呼び出し
-　$･･･データ参照
-　@･･･タイムリーフの記載方。コンテキストパスなどを上手く補完した形式でパスを構築。
-　　種類			説明
-　　foo/bar			通常の相対パス
-　　/foo/bar		コンテキストパスからの相対パス
-　　~/foo/bar		サーバーのルートからの相対パス（/foo が他のコンテキストパスになる）
-　　http://xxx/xxx	絶対パス
-　　//xxx/xxx		プロトコル相対パス
+  記号
+  #･･･関数呼び出し
+  $･･･データ参照
+  @･･･タイムリーフの記載方。コンテキストパスなどを上手く補完した形式でパスを構築。
+    種類			説明
+    foo/bar			通常の相対パス
+    /foo/bar		コンテキストパスからの相対パス
+    ~/foo/bar		サーバーのルートからの相対パス（/foo が他のコンテキストパスになる）
+    http://xxx/xxx	絶対パス
+    //xxx/xxx		プロトコル相対パス
 
 ■SpringJDBCの実装クラス
-　SpringJDBCの実装クラスには、以下の２つがあります。
-　・JdbcTemplate
-　・NamedParameterJdbcTemplate
+  SpringJDBCの実装クラスには、以下の２つがあります。
+  ・JdbcTemplate
+  ・NamedParameterJdbcTemplate
 
 ■SpringJDBCのメソッド
-　登録・更新・削除はupdateメソッドを使う。
-　カウントなどでは、queryForObjectメソッドを使う。
-　１件だけ取得するselect文では、queryForMapメソッドを使う。
-　複数件取得するselect文では、queryForListメソッドを使う。
-　RowMapperを使うと、O/Rマッピングができる。
-　BeanPropertyRowMapperを使えば、マッピング定義が不要。
-　RowCallbackHandlerを使えば、コールバック処理ができる。
+  登録・更新・削除はupdateメソッドを使う。
+  カウントなどでは、queryForObjectメソッドを使う。
+  １件だけ取得するselect文では、queryForMapメソッドを使う。
+  複数件取得するselect文では、queryForListメソッドを使う。
+  RowMapperを使うと、O/Rマッピングができる。
+  BeanPropertyRowMapperを使えば、マッピング定義が不要。
+  RowCallbackHandlerを使えば、コールバック処理ができる。
 
 ■トランザクション
-　以下の2つがある
-　　・宣言的トランザクション･･･よく使う
-　　　トランザクションを使うためには、クラスに@Transactinalアノテーションをつける。
-　　　引数を付けることでトランザクションのレベルを設定することがでる。
-　　　一般的には、ビジネスロジックを担当するサービスクラスに@Transactinalアノテーションを付ける。
-　　・明示的トランザクション･･･あまり使わない
-　　　明示的トランザクションを使うためには、PlatformTransactionManagerとDefaultTransactionDefinitionというクラスを使う。
-　　　PlatformTransactionManagerは、トランザクションを開始したり、コミットなどをするクラス。
-　　　DefaultTransactionDefinitionは、トランザクションの設定をするクラス。
-　　　AOPで実装する方法がある
+  以下の2つがある
+    ・宣言的トランザクション･･･よく使う
+      トランザクションを使うためには、クラスに@Transactinalアノテーションをつける。
+      引数を付けることでトランザクションのレベルを設定することがでる。
+      一般的には、ビジネスロジックを担当するサービスクラスに@Transactinalアノテーションを付ける。
+    ・明示的トランザクション･･･あまり使わない
+      明示的トランザクションを使うためには、PlatformTransactionManagerとDefaultTransactionDefinitionというクラスを使う。
+      PlatformTransactionManagerは、トランザクションを開始したり、コミットなどをするクラス。
+      DefaultTransactionDefinitionは、トランザクションの設定をするクラス。
+      AOPで実装する方法がある
 
 ■トランザクションの設定
-　@Transactionalアノテーションに以下の属性と値を設定する。
-　
-　value
-　　複数のトランザクションマネージャーを使用する場合、利用するトランザクションマネージャーのQualifierを指定する。
-　　デフォルトのトランザクションマネージャーを使用する場合は省略可能です。
-　transactionManager
-　　valueの別名
-　propagation
-　　トランザクションの伝播レベルを指定します。詳細は後述。
-　isolation
-　　トランザクションの分離レベルを指定します。詳細は後述。
-　timeout
-　　トランザクションのタイムアウト時間（秒）を指定します。
-　　デフォルトは-1（使用するデータベースの仕様や設定に依存）
-　readOnly
-　　トランザクションの読取専用フラグを指定します。
-　　デフォルトはfalse（読取専用ではない）
-　rollbackFor
-　　トランザクションのロールバック対象とする例外クラスのリストを指定する。
-　　デフォルトではRuntimeException（非検査例外）がロールバック対象。
-　rollbackForClassName
-　　トランザクションのロールバック対象とする例外クラス名のリストを指定。
-　　デフォルトは空（指定なし）
-　noRollbackFor
-　　トランザクションのコミット対象とする例外クラスのリストを指定。
-　　デフォルトは空（指定なし）
-　noRollbackForClassName
-　　トランザクションのコミット対象とする例外クラス名のリストを指定。
-　　デフォルトは空（指定なし）
+  @Transactionalアノテーションに以下の属性と値を設定する。
+
+  value
+    複数のトランザクションマネージャーを使用する場合、利用するトランザクションマネージャーのQualifierを指定する。
+    デフォルトのトランザクションマネージャーを使用する場合は省略可能です。
+  transactionManager
+    valueの別名
+  propagation
+    トランザクションの伝播レベルを指定します。詳細は後述。
+  isolation
+    トランザクションの分離レベルを指定します。詳細は後述。
+  timeout
+    トランザクションのタイムアウト時間（秒）を指定します。
+    デフォルトは-1（使用するデータベースの仕様や設定に依存）
+  readOnly
+    トランザクションの読取専用フラグを指定します。
+    デフォルトはfalse（読取専用ではない）
+  rollbackFor
+    トランザクションのロールバック対象とする例外クラスのリストを指定する。
+    デフォルトではRuntimeException（非検査例外）がロールバック対象。
+  rollbackForClassName
+    トランザクションのロールバック対象とする例外クラス名のリストを指定。
+    デフォルトは空（指定なし）
+  noRollbackFor
+    トランザクションのコミット対象とする例外クラスのリストを指定。
+    デフォルトは空（指定なし）
+  noRollbackForClassName
+    トランザクションのコミット対象とする例外クラス名のリストを指定。
+    デフォルトは空（指定なし）
 
 ■トランザクションの分離レベル(isolation)
-　トランザクションを複数同時に実行しても、正常な処理をしなければならないこと
-　データベース製品によっては使えないレベルもありますので、注意
-　DEFAULT
-　　利用するデータベースのデフォルトの分離レベルを利用。
-　READ_UNCOMMITTED
-　　他のトランザクションが、まだコミットしていないデータを読み出せる。
-　　もし変更データがロールバックされた場合、次のトランザクションでは無効な行データが検索される。
-　READ_COMMITTED
-　　他のトランザクションがコミットしていないデータは読み出せない。
-　REPEATABLE_READ
-　　トランザクション内で、複数回データを読み込んだ場合、他のトランザクションが途中でデータを変更しても、同じ値が読み込まれる。
-　SERIALIZABLE
-　　トランザクションをひとつひとつ、順番に処理する。
+  トランザクションを複数同時に実行しても、正常な処理をしなければならないこと
+  データベース製品によっては使えないレベルもありますので、注意
+  DEFAULT
+    利用するデータベースのデフォルトの分離レベルを利用。
+  READ_UNCOMMITTED
+    他のトランザクションが、まだコミットしていないデータを読み出せる。
+    もし変更データがロールバックされた場合、次のトランザクションでは無効な行データが検索される。
+  READ_COMMITTED
+    他のトランザクションがコミットしていないデータは読み出せない。
+  REPEATABLE_READ
+    トランザクション内で、複数回データを読み込んだ場合、他のトランザクションが途中でデータを変更しても、同じ値が読み込まれる。
+  SERIALIZABLE
+    トランザクションをひとつひとつ、順番に処理する。
 
 ■トランザクションの伝播レベル(propagation)
-　トランザクションを新たに作成して開始するのかどうか
-　特に重要なのが、サービスクラスから別のサービスクラスを呼び出す場合。
-　トランザクションを開始するのか、あるいは、既にあるトランザクションに参加するのかを設定できる。
-　
-　REQUIRED
-　　デフォルトの伝播レベル。
-　　REQUIREDはトランザクションが存在しない場合、新規にトランザクションを開始する。
-　　既に存在する場合はそのトランザクションを利用する。
-　REQUIRES_NEW
-　　必ず、新規のトランザクションを作成する。
-　MANDATORY
-　　MANDATORYは、すでにトランザクションが存在することを前提にする。
-　　トランザクションが存在しない場合、例外が発生する。
-　　すでに存在する場合は、そのトランザクションを利用する。
-　NEVER
-　　NEVERはトランザクションを使用しない。
-　　すでにトランザクションが存在する場合は例外が発生する。
-　NOT_SUPPORTED
-　　NOT_SUPPORTEDはトランザクションを使用しない。
-　　すでにトランザクションが存在する場合はそのトランザクションを一時停止し、
-　　トランザクションを使用せずに処理を実行後、停止していたトランザクションを再開する。
-　SUPPORTS
-　　トランザクションが存在しない場合、トランザクションは作成しない。
-　　既にに存在する場合は、そのトランザクションを利用する。
-　NESTEDネストしたトランザクションを作成する。
-　　トランザクションが存在しない場合、新規にトランザクションを開始し、
-　　すでに存在する場合はそのトランザクションを利用するが、その部分だけネストしたトランザクションのように処理される。
+  トランザクションを新たに作成して開始するのかどうか
+  特に重要なのが、サービスクラスから別のサービスクラスを呼び出す場合。
+  トランザクションを開始するのか、あるいは、既にあるトランザクションに参加するのかを設定できる。
+
+  ・REQUIRED
+     デフォルトの伝播レベル。
+     REQUIREDはトランザクションが存在しない場合、新規にトランザクションを開始する。
+     既に存在する場合はそのトランザクションを利用する。
+  ・REQUIRES_NEW
+     必ず、新規のトランザクションを作成する。
+  ・MANDATORY
+     MANDATORYは、すでにトランザクションが存在することを前提にする。
+     トランザクションが存在しない場合、例外が発生する。
+     すでに存在する場合は、そのトランザクションを利用する。
+  ・NEVER
+     NEVERはトランザクションを使用しない。
+     すでにトランザクションが存在する場合は例外が発生する。
+  ・NOT_SUPPORTED
+     NOT_SUPPORTEDはトランザクションを使用しない。
+     すでにトランザクションが存在する場合はそのトランザクションを一時停止し、
+     トランザクションを使用せずに処理を実行後、停止していたトランザクションを再開する。
+  ・SUPPORTS
+     トランザクションが存在しない場合、トランザクションは作成しない。
+     既にに存在する場合は、そのトランザクションを利用する。
+  ・NESTEDネストしたトランザクションを作成する。
+     トランザクションが存在しない場合、新規にトランザクションを開始し、
+     すでに存在する場合はそのトランザクションを利用するが、その部分だけネストしたトランザクションのように処理される。
 
 
-　まとめ
-　              サービス２に伝播レベルを設定
-　伝播レベル    サービス２を直接呼出        サービス１経由でサービス２を呼出
-　----------------------------------------------------------------------------------------
-　REQUIRED      トランザクション開始        サービス１のトランザクションに参加
-　REQUIRES_NEW  トランザクション開始        トランザクション開始
-　MANDATORY      例外を投げる               サービス１のトランザクションに参加
-　NEVER         トランザクションを行わない  例外を投げる
-　NOT_SUPPORTED トランザクションを行わない  トランザクションを行わない
-　SUPPORTS      トランザクションを行わない  サービス１のトランザクションに参加
-　NESTED        トランザクション開始        部分的なトランザクション開始
+  まとめ
+                サービス２に伝播レベルを設定
+  伝播レベル    サービス２を直接呼出        サービス１経由でサービス２を呼出
+  ----------------------------------------------------------------------------------------
+  REQUIRED      トランザクション開始        サービス１のトランザクションに参加
+  REQUIRES_NEW  トランザクション開始        トランザクション開始
+  MANDATORY      例外を投げる               サービス１のトランザクションに参加
+  NEVER         トランザクションを行わない  例外を投げる
+  NOT_SUPPORTED トランザクションを行わない  トランザクションを行わない
+  SUPPORTS      トランザクションを行わない  サービス１のトランザクションに参加
+  NESTED        トランザクション開始        部分的なトランザクション開始
 
 
 ■例外処理
-　Springの例外処理実装方法
-　・@AfterThrowingアスペクトを使用する(com.example.demo.login.aspect.ErrorAspect)
-　・コントローラークラス毎に例外ハンドリングを実装する(com.example.demo.login.controller.SignupController)
-　　コントローラークラス内に、@ExceptionHandlerというアノテーションを付けたメソッドを用意
-　・Webアプリケーション全体で共通の例外ハンドリングを実装する(com.example.demo.login.controller.GlobalControllAdvice)
-　　@ControllerAdviceアノテーションを付けたクラスを用意
-　　クラスの中身は、@ExceptionHandlerを付けたメソッドを用意する
+  Springの例外処理実装方法
+  ・@AfterThrowingアスペクトを使用する(com.example.demo.login.aspect.ErrorAspect)
+  ・コントローラークラス毎に例外ハンドリングを実装する(com.example.demo.login.controller.SignupController)
+    コントローラークラス内に、@ExceptionHandlerというアノテーションを付けたメソッドを用意
+  ・Webアプリケーション全体で共通の例外ハンドリングを実装する(com.example.demo.login.controller.GlobalControllAdvice)
+    @ControllerAdviceアノテーションを付けたクラスを用意
+    クラスの中身は、@ExceptionHandlerを付けたメソッドを用意する
 
 ■エラーページ
-　・共通のエラーページ
-　　src/main/resources/template配下に、error.htmlを用意
-　・HTTPエラー毎のエラーページ
-　　src/main/resources/errorフォルダーに<エラーコード>.htmlというファイルを作成する。
+  ・共通のエラーページ
+    src/main/resources/template配下に、error.htmlを用意
+  ・HTTPエラー毎のエラーページ
+    src/main/resources/errorフォルダーに<エラーコード>.htmlというファイルを作成する。
+
+■認可
+　Springでは、ロール名の先頭に"ROLE_"を付けるというルールがある。
+　中には、"ROLE_"を省略して引数にセットするようなメソッドもある。
+　データベースにロール名を登録する際は、"ROLE_"を付けるようにする。
+
+■ログイン処理
+　CSSなどの静的リソースへのアクセスには、セキュリティを無効にする。
+　直リンクを許可するには、.antMatchers("<パス>").permitAll()を設定する。
+　直リンクを禁止するには、.anyRequest().authenticated()を設定する。
+　Springでは、デフォルトでログイン画面が用意されている。
+　データベースからユーザー情報を取得するSQLを２つ用意する（ユーザー情報とロールを取得するSQL）。
+　パスワードは暗号化して登録しなければならない。
+　ログアウト処理はデフォルトではPOSTメソッドで行う。
+　ログイン時のエラーメッセージはmessages.propertiesに定義する。
+
+■CSRF対策
+　CSRF対策を有効にする場合、formタグ内にはth:action属性を使う。
+　Springでは、デフォルトでCSRF対策が有効になる。
+  th:action属性を使っていると、タイムリーフで自動でCSRF対策用のトークンを追加してくれる。
+  基本的にはaction属性ではなく、th:action属性を使うようにする。
+
+  ログイン画面だけaction属性を使っている。その場合、以下のコードを追加しないといけない。
+  <!-- CSRF対策用トークン -->
+  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+
+■認可
+　認可には、URLでの認可と画面表示の認可がある。
+　URLの認可はSecurityConfigにantMatchers("<パス>").hasAuthority("<ロール>")を設定する。
+　画面表示の認可には、htmlにsec:authorize="hasRole('<権限>')"を付ける。
+
+■セキュリティその他
+　ロール名の先頭には"ROLE_"を付けてデータベースに登録する。
