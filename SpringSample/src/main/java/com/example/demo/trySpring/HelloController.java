@@ -24,7 +24,7 @@ public class HelloController {
 	// @PostMapping post用
 	// @RequestParam htmlのname属性を指定
 	@PostMapping("/hello")
-	public String postRequest(@RequestParam("text1")String str,Model model) {
+	public String postRequest(@RequestParam("text1") String str, Model model) {
 
 		// 画面から受け取った文字列をModelに登録
 		model.addAttribute("sample", str);
@@ -33,7 +33,7 @@ public class HelloController {
 	}
 
 	@PostMapping("/hello/db")
-	public String postDbRequest(@RequestParam("text2")String str,Model model) {
+	public String postDbRequest(@RequestParam("text2") String str, Model model) {
 
 		int id = Integer.parseInt(str);
 

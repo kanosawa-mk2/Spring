@@ -25,7 +25,7 @@ public class HelloRepository {
 				+ " WHERE employee_id = ?";
 
 		// 検索実行
-		Map<String,Object> employee = jdbcTemplate.queryForMap(query, id);
+		Map<String, Object> employee = jdbcTemplate.queryForMap(query, id);
 
 		return employee;
 	}

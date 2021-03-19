@@ -36,7 +36,7 @@ public class UserRestController {
 	 * @return
 	 */
 	@GetMapping("/rest/get")
-	public List<User> getUserMany(){
+	public List<User> getUserMany() {
 		return service.selectMany();
 	}
 
@@ -46,7 +46,7 @@ public class UserRestController {
 	 * @return
 	 */
 	@GetMapping("rest/get/{id:.+}")
-	public User getUserOne(@PathVariable("id") String userId){
+	public User getUserOne(@PathVariable("id") String userId) {
 		return service.selectOne(userId);
 	}
 
@@ -62,9 +62,9 @@ public class UserRestController {
 
 		String str = "";
 
-		if(result) {
+		if (result) {
 			str = "{\"result\":\"ok\"}";
-		}else {
+		} else {
 			str = "{\"result\":\"error\"}";
 		}
 		return str;
@@ -80,9 +80,9 @@ public class UserRestController {
 
 		String str = "";
 
-		if(result) {
+		if (result) {
 			str = "{\"result\":\"ok\"}";
-		}else {
+		} else {
 			str = "{\"result\":\"error\"}";
 		}
 		return str;
@@ -98,9 +98,9 @@ public class UserRestController {
 
 		String str = "";
 
-		if(result) {
+		if (result) {
 			str = "{\"result\":\"ok\"}";
-		}else {
+		} else {
 			str = "{\"result\":\"error\"}";
 		}
 		return str;

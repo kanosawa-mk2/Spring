@@ -14,7 +14,7 @@ public class HelloService {
 
 	public Employee findOne(int id) {
 
-		Map<String,Object> map = helloRepository.findOne(id);
+		Map<String, Object> map = helloRepository.findOne(id);
 
 		int employeeId = (Integer)map.get("employee_id");
 		String employeeName = (String)map.get("employee_name");
