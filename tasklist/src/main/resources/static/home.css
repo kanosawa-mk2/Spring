@@ -1,0 +1,11 @@
+@charset "UTF-8";
+
+body {
+	margin:30px;
+	color: #283655;
+}
+
+.hidden{
+	display: none;
+}
+
