@@ -10,7 +10,7 @@
 	<h1>タスク管理アプリケーション</h1>
 	<div>
 		<h2>タスクの登録</h2>
-		<form action="/add">
+		<form th:action="@{/add}">
 			<labe>タスク</labe>
 				<input name="task" type="text" />
 				<label>期限</label>
@@ -50,7 +50,7 @@
 						">更新</button>
 					</td>
 					<td width="50px">
-						<form action="/delete">
+						<form th:action="@{/delete}">
 							<button type="submit" id="delete_button">削除</button>
 							<input type="hidden" name="id" th:value="${task.id}" />
 						</form>
@@ -61,7 +61,7 @@
 		<div id="updateDialog">
 			<div class="task_form">
 				<h2>タスクの更新</h2>
-				<form action="/update">
+				<form th:action="@{/update}">
 					<input id="update_id" name="id" type="hidden" />
 					<label>タスク</label>
 					<input id="update_task" name="task" type="text" />
